@@ -1,5 +1,5 @@
 //
-//  ViewController.h
+//  HomeViewController.h
 //  TestApplication
 //
 //  Created by SYNC Technologies on 21/03/15.
@@ -7,9 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "dataHandler.h"
 
-@interface ViewController : UIViewController
-
+@interface HomeViewController : UIViewController{
+    dataHandler *db;
+}
 
 @end
-

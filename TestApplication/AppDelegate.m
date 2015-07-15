@@ -7,17 +7,57 @@
 //
 
 #import "AppDelegate.h"
+#import "HomeViewController.h"
+
 
 @interface AppDelegate ()
 
+@property (nonatomic, strong) HomeViewController *objHomeView;
+@property (nonatomic, strong) NSString *databaseName;
+@property (nonatomic, strong) NSString *databasePath;
 @end
 
 @implementation AppDelegate
 
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+    
+    
+    //Database connection
+    self.databaseName = @"testApplication.sqlite";
+    
+    NSArray *documentPaths = NSSearchPathForDirectoriesInDomains(NSDocumentationDirectory, NSUserDomainMask, YES);
+    NSString *documentDir = [documentPaths objectAtIndex:0];
+    self.databasePath = [documentDir stringByAppendingPathComponent:self.databaseName];
+    
+    [self createAndCheckDatabase];
     // Override point for customization after application launch.
+    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+    
+    //navigation to homeview controller.
+    self.objHomeView = [[HomeViewController alloc] initWithNibName:@"HomeViewController" bundle:nil];
+    self.navCtrl = [[UINavigationController alloc] initWithRootViewController:self.objHomeView];
+    [self.window setRootViewController:self.navCtrl];
+    self.window.backgroundColor = [UIColor whiteColor];
+    [self.window makeKeyAndVisible];
+    
+    
     return YES;
+}
+
+- (void) createAndCheckDatabase{
+    BOOL success;
+    
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    success = [fileManager fileExistsAtPath:self.databasePath];
+    
+    if (success) {
+        return;
+    }
+    
+    NSString *databasePathFromApp = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:self.databaseName];
+    
+    [fileManager copyItemAtPath:databasePathFromApp toPath:self.databasePath error:nil];
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application {
